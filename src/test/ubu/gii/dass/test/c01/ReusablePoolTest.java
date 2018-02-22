@@ -57,7 +57,23 @@ public class ReusablePoolTest {
 	 */
 	@Test
 	public void testAcquireReusable() {
-		fail("Not yet implemented");
+		try {
+			assertTrue(pool.acquireReusable() instanceof Reusable);
+		} catch (NotFreeInstanceException e) {
+			fail("Deberian quedar 2 reusables");
+		}
+		try {
+			assertTrue(pool.acquireReusable() instanceof Reusable);
+		} catch (NotFreeInstanceException e) {
+			fail("Deberian quedar 1 reusables");
+		}
+		
+		try {
+				pool.acquireReusable();
+				fail("No deberian quedar reusables.");
+		} catch (NotFreeInstanceException e) {
+			assertEquals(e.getMessage(),"No hay más instancias reutilizables disponibles. Reintentalo más tarde");
+		}
 	}
 
 	/**
