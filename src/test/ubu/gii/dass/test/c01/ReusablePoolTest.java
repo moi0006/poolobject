@@ -80,8 +80,35 @@ public class ReusablePoolTest {
 	 * Test method for {@link ubu.gii.dass.c01.ReusablePool#releaseReusable(ubu.gii.dass.c01.Reusable)}.
 	 */
 	@Test
-	public void testReleaseReusable() {
-		fail("Not yet implemented");
+	public void testReleaseReusable() throws NotFreeInstanceException {
+		Reusable r1 = pool.acquireReusable();
+		Reusable r2 = pool.acquireReusable();
+		
+		try {
+			pool.releaseReusable(r1);
+		} catch (DuplicatedInstanceException e) {
+			fail("El reusable deberia poder devolverse");
+		}
+		
+		try {
+			pool.releaseReusable(r2);
+		} catch (DuplicatedInstanceException e) {
+			fail("El reusable deberia poder devolverse");
+		}
+		
+		try {
+			pool.releaseReusable(r1);
+			fail("No deberia poder devolverse el objeto");
+		} catch (DuplicatedInstanceException e) {
+			assertEquals(e.getMessage(),"Ya existe esa instancia en el pool.");
+		}
+		
+		try {
+			pool.releaseReusable(r2);
+			fail("No deberia poder devolverse el objeto");
+		} catch (DuplicatedInstanceException e) {
+			assertEquals(e.getMessage(),"Ya existe esa instancia en el pool.");
+		}
 	}
 
 }
